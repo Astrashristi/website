@@ -1,0 +1,37 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  author?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description,
+  date,
+  author = "Astrashristi",
+  image,
+} = Astro.props;
+---
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: description,
+    datePublished: date,
+    author: {
+      "@type": "Organization",
+      name: author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Astrashristi",
+    },
+    ...(image && { image: image }),
+  })}
+/>

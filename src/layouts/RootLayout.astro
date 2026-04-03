@@ -4,11 +4,32 @@ import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import LoadingIndicator from "astro-loading-indicator/component";
 
-const { title, description } = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  type?: "website" | "article";
+  publishedDate?: string;
+}
+const {
+  title,
+  description,
+  image,
+  canonicalUrl,
+  type = "website",
+  publishedDate,
+} = Astro.props;
 
 const defaultTitle = "Astrashristi";
 const defaultDescription =
   "Astrashristi is a technology company focused on building powerful, innovative, and reliable digital solutions.";
+const siteUrl = "https://astrashristi.software";
+
+const finalTitle = title ? `${title} | ${defaultTitle}` : defaultTitle;
+const finalDescription = description ?? defaultDescription;
+const finalImage = image ?? `${siteUrl}/astrashristi.png`;
+const finalUrl = canonicalUrl ?? Astro.url.href;
 ---
 
 <!doctype html>
@@ -18,22 +39,28 @@ const defaultDescription =
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/astrashristi.png" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title ?? defaultTitle}</title>
-    <meta name="description" content={description ?? defaultDescription} />
+    <title>{finalTitle}</title>
+    <meta name="description" content={finalDescription} />
 
-    <meta property="og:url" content="#" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={defaultTitle} />
-    <meta property="og:description" content={defaultDescription} />
-    <meta property="og:image" content="/social-image.jpg" />
+    <!-- Open Graph -->
+    <meta property="og:url" content={finalUrl} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={finalTitle} />
+    <meta property="og:description" content={finalDescription} />
+    <meta property="og:image" content={finalImage} />
+    <meta property="og:site_name" content={defaultTitle} />
 
-    <!-- Twitter Meta Tags -->
-    <!-- <meta name="twitter:card" content="summary_large_image" />
-		<meta property="twitter:domain" content="nikola.fluidinterfaces.com" />
-		<meta property="twitter:url" content="https://nikola.fluidinterfaces.com/" />
-		<meta name="twitter:title" content={defaultTitle} />
-		<meta name="twitter:description" content={defaultDescription} />
-		<meta name="twitter:image" content="/social-image.jpg" /> -->
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={finalTitle} />
+    <meta name="twitter:description" content={finalDescription} />
+    <meta name="twitter:image" content={finalImage} />
+
+    {
+      publishedDate && (
+        <meta property="article:published_time" content={publishedDate} />
+      )
+    }
 
     <Font cssVariable="--font-geist" preload />
     <ClientRouter />
