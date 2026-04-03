@@ -2,6 +2,7 @@ import { z } from "astro:schema";
 import { defineAction } from "astro:actions";
 import { getCollection } from "astro:content";
 
+
 export const categories = {
     getCategories: defineAction({
         input: z.null(),
